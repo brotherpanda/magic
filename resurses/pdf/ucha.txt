@@ -1,0 +1,536 @@
+Understanding TCP/IP Networking
+Networking involves quite a few components that are built atop one another. These include 
+network hardware, data packets, and protocols for data exchange. Together, these 
+components make up a network stack. The most common network stack today is the 
+Transmission Control Protocol/Internet Protocol (TCP/IP) stack, but this isn’t the only 
+stack available. Nonetheless, understanding the basics of TCP/IP theory will help you to 
+confi gure and manage networks.
+Knowing the Basic Functions of Network Hardware
+Network hardware is designed to enable two or more computers to communicate with one 
+another. Modern computers have network interfaces built into their motherboards, but 
+internal (PCI, PCIe, or similar) network cards and external (USB, PC Card, and similar) 
+network interfaces are also available. Many networks rely on wires or cables to transmit 
+data between machines as electrical impulses, but network protocols that use radio waves 
+or even light to do the job are growing rapidly in popularity.
+Sometimes the line between network hardware and peripheral interface ports can be 
+blurry. For instance, a parallel port normally isn’t considered a network port; but when 
+it’s used with the Parallel Line Interface Protocol (PLIP; http://tldp.org/HOWTO/PLIP
+.html), the parallel port becomes a network device. In the past, a USB or RS-232 serial 
+port frequently became a network interface when used with the Point-to-Point Protocol 
+(PPP), typically in conjunction with a telephone modem. Such connections are rare today, 
+c08.indd 382 11/12/12 12:12 PM
+Understanding TCP/IP Networking 383
+but they’re still possible. If you need to know how to confi gure a PPP connection, consult your distribution’s documentation or the PPP HOWTO (http://tldp.org/HOWTO/
+PPP-HOWTO/).
+At its core, network hardware is hardware that facilitates the transfer of data between 
+computers. Hardware that’s most often used for networking includes features that help this 
+transfer in various ways. For instance, such hardware may include ways to address data 
+intended for specifi c remote computers, as described later in the section “Addressing 
+Hardware.” When basically non-network hardware is pressed into service as a network 
+medium, the lack of such features may limit the utility of the hardware or require extra 
+software to make up for the lack. If extra software is required, you’re unlikely to notice the 
+defi ciencies as a user or system administrator because the protocol drivers handle the work, 
+but this makes the hardware more diffi cult to confi gure and more prone to sluggishness or 
+other problems than dedicated network hardware.
+Investigating Types of Network Hardware
+Linux supports several types of common network hardware. The most common of these 
+is Ethernet, which comes in several varieties. Most modern Ethernet hardware uses 
+twisted-pair cabling, which consists of pairs of wires twisted around each other to 
+minimize interference. Such varieties of Ethernet are identifi ed by a -T suffi x to the Ethernet 
+variety name, as in 10Base-T or 100Base-T. The numbers denote the speed of the protocol 
+in megabits per second (Mbps). In the late 1990s, 100Base-T took over from 10Base-T 
+as the standard in offi ce and even home networks. More recently, 1000Base-T and 
+Ethernet variants that use optical cabling and that are capable of 1000Mbps speeds (that 
+is, gigabit Ethernet) have become the standard, with 10-gigabit Ethernet the new emerging 
+standard.
+Other types of network hardware exist, but most are less common than Ethernet. These 
+include Token Ring, LocalTalk, Fiber Distributed Data Interface (FDDI), High-Performance 
+Parallel Interface (HIPPI), and Fibre Channel. Token Ring was common on some 
+IBM-dominated networks in the 1990s but has been steadily losing ground to Ethernet for 
+years. Likewise, LocalTalk was the favored medium for early Macintoshes, but modern 
+Macs ship with Ethernet instead of LocalTalk. FDDI, HIPPI, and Fibre Channel are all 
+high-speed interfaces that are used in high-performance applications. Some of these 
+protocols support signifi cantly greater maximum cable lengths than does Ethernet, which 
+makes them suitable for linking buildings that are many yards, or even miles, apart.
+Wireless networking (aka Wi-Fi) is an exception to Ethernet’s dominance. Common 
+wireless protocols include 802.11a, 802.11b, 802.11g, and 802.11n. These protocols 
+support maximum speeds of 11Mbps (for 802.11b), 54Mbps (for 802.11a and 802.11g), or 
+300 Mbps (for 802.11n). With the exception of the rarely used 802.11a, Wi-Fi protocols 
+are compatible with one another, albeit at the speed of the slowest protocol in use. Wireless 
+networking is particularly useful for laptop computers, but it’s even handy for desktop 
+computers in homes and small offi ces that don’t have adequate wired network infrastructures 
+in place.
+c08.indd 383 11/12/12 12:12 PM
+384 Chapter 8 ■ Configuring Basic Networking
+If you use a wireless protocol, your data are transmitted via radio waves, 
+which are easily intercepted. Wireless protocols include optional 
+encryption, but this feature is sometimes disabled by default, and some 
+varieties of wireless encryption are notoriously poor. If you use wireless 
+network products, be sure to enable Wi-Fi Protected Access (WPA) or, 
+better, WPA2 encryption. The weaker Wired Equivalent Privacy (WEP) 
+encryption is easily broken. For added protection, use a strong encryption 
+protocol, such as the Secure Shell (SSH) login tool or Secure Sockets Layer 
+(SSL) encryption, when transferring any data that’s even remotely sensitive; 
+and be extra cautious about security on networks that support wireless 
+access. In a typical configuration, an intruder who can break into your 
+wireless access point looks to the rest of your network like any other local 
+user, so protecting that access point is extremely important.
+In addition to the network hardware in your computers, you need network hardware 
+outside the computers. With the exception of wireless networks, you need some form of 
+network cabling that’s unique to your hardware type. (For 100Base-T Ethernet, get cabling 
+that meets at least Category 5, or Cat-5, specifi cations. Gigabit Ethernet works best with 
+Cat-5e or optical cables.) Many network types, including twisted-pair Ethernet, require the 
+use of a central device known as a hub or switch. You plug every computer on a local 
+network into this central device, as shown in Figure 8.1. The hub or switch then passes 
+data between the computers.
+FIGURE 8.1 Many networks link computers together via a central device known as a 
+hub or switch.
+Hub or switch
+As a general rule, switches are superior to hubs. Hubs mirror all traffi c to all computers, 
+whereas switches are smart enough to send packets only to the intended destination. 
+Switches also allow full-duplex transmission, in which both parties can send data at the 
+c08.indd 384 11/12/12 12:12 PM
+Understanding TCP/IP Networking 385
+same time (like two people talking on a telephone). Hubs permit only half-duplex
+transmission, in which the two computers must take turns (like two people using 
+walkie-talkies). The result is that switches let two pairs of computers engage in full-speed data 
+transfers with each other; with a hub, these two transfers would interfere with each other.
+Computers with Wi-Fi adapters can be confi gured to communicate directly with one 
+another, but it’s more common to employ a wireless router, which links together both 
+wireless and Ethernet devices. Such routers also provide connections to an outside 
+network—typically the Internet, sometimes via a broadband connection.
+Understanding Network Packets
+Modern networks operate on discrete chunks of data known as packets. Suppose you want 
+to send a 100KiB fi le from one computer to another. Rather than send the fi le in one burst 
+of data, your computer breaks it down into smaller chunks. The system might send 100 
+packets of 1KiB each, for instance. This way, if there’s an error sending one packet, the 
+computer can resend just that one packet rather than the entire fi le. (Many network 
+protocols include error-detection procedures.)
+When the recipient system receives packets, it must hold on to them and reassemble them 
+in the correct order to re-create the complete data stream. It’s not uncommon for packets 
+to be delayed or even lost in transmission, so error-recovery procedures are critical for 
+protocols that handle large transfers. Some types of error recovery are handled transparently 
+by the networking hardware.
+There are several types of packets, and they can be stored within each other. For 
+instance, Ethernet includes its own packet type (known as a frame), and the packets 
+generated by networking protocols that run atop Ethernet, such as those described in the 
+next section, are stored within Ethernet frames. All told, a data transfer can involve several 
+layers of wrapping and unwrapping data. With each layer, packets from the adjacent layer 
+may be merged or split up.
+Understanding Network Protocol Stacks
+It’s possible to think of network data at various levels of abstractness. For instance, at one 
+level, a network carries data packets for a specifi c network type (such as Ethernet); the data 
+packets are addressed to specifi c computers on a local network. Such a description, while 
+useful for understanding a local network, isn’t very useful for understanding higher-level 
+network protocols, such as those that handle email transfers. These high-level protocols 
+are typically described in terms of commands sent back and forth between computers, 
+frequently without reference to packets. The addresses used at different levels also vary, as 
+explained in the upcoming section “Using Network Addresses.”
+A protocol stack is a set of software that converts and encapsulates data between layers 
+of abstraction. For instance, the stack can take the commands of email transfer protocols, 
+and the email messages that are transferred, and package them into packets. Another layer 
+of the stack can take these packets and repackage them into Ethernet frames. There are 
+c08.indd 385 11/12/12 12:12 PM
+386 Chapter 8 ■ Configuring Basic Networking
+several layers to any protocol stack, and they interact in highly specifi ed ways. It’s often 
+possible to swap out one component for another at any given layer. For instance, at the top 
+of each stack is a program that uses the stack, such as an email client. You can switch 
+from one email client to another without too much diffi culty; both rest atop the same 
+stack. Likewise, if you change a network card, you have to change the driver for that card, 
+which constitutes a layer very low in the stack. Applications above that driver can remain 
+the same.
+Each computer in a transaction requires a compatible protocol stack. When they communicate, the computers pass data down their respective stacks and then send data to the 
+partner system, which passes the data up its stack. Each layer on the receiving system sees 
+the data as packaged by its counterpart on the sending computer.
+Protocol stacks are frequently represented graphically in diagrams like Figure 8.2, which 
+shows the confi guration of the TCP/IP protocol stack that dominates the Internet today. As 
+shown in Figure 8.2, client programs at the application layer initiate data transfers. These 
+requests pass through the transport, internet, and link layers on the client computer, 
+whereupon they leave the client system and pass to the server system. (This transfer can 
+involve a lot of complexity not depicted in Figure 8.2.) On the server, the process reverses 
+itself, with the server program running at the application layer replying to the client 
+program. This reply reverses the journey, traveling down the server computer’s stack, across 
+the network, and up the stack on the client. A full-fl edged network connection can involve 
+many back-and-forth data transfers.
+FIGURE 8.2 Information travels “down” and “up” protocol stacks, being checked and 
+re-packed at each step of the way.
+Application
+Transport
+Internet
+Link
+Client
+Reply
+Request
+Application
+Transport
+Internet
+Link
+Server
+c08.indd 386 11/12/12 12:12 PM
+Understanding TCP/IP Networking 387
+When spelled with an uppercase I, the word Internet refers to the 
+globe-spanning network of networks with which you’re no doubt familiar. 
+When spelled with a lowercase i, however, the word internet refers to any 
+collection of networks. An internet in this sense could be a couple of 
+small networks in somebody’s basement with no outside connections. 
+Internet networking protocols such as TCP/IP can work on any internet, up 
+to and including the Internet.
+Each component layer of the sending system is equivalent to a layer on the receiving 
+system, but these layers need not be absolutely identical. For instance, you can have different models of network card at the link layer, or you can even use entirely different network 
+hardware types, such as Ethernet and Token Ring, if some intervening system translates 
+between them. The computers may run different OSs and hence use different—but logically 
+equivalent—protocol stacks. What’s important is that the stacks operate in compatible ways.
+Linux was designed with TCP/IP in mind, and the Internet is built atop TCP/IP. Other 
+protocol stacks are available, though, and you may occasionally run into them. In particular, 
+NetBEUI was the original Microsoft and IBM protocol stack for Windows, AppleTalk 
+was Apple’s initial protocol stack, and the Internet Packet Exchange/Sequenced Packet 
+Exchange (IPX/SPX) was Novell’s favored protocol stack. All three are now fading in 
+importance, but you may still need to use them in some environments. Linux supports 
+AppleTalk and IPX/SPX but not NetBEUI.
+Knowing TCP/IP Protocol Types
+Within TCP/IP, several different protocols exist. Each of these protocols can be classifi ed 
+as falling on one of the four layers of the TCP/IP stack, as shown in Figure 8.2. The most 
+important of the internet- and transport-layer protocols are the building blocks for the 
+application-layer protocols with which you interact more directly. These important 
+internet- and transport-layer protocols include the following:
+IP The Internet Protocol (IP) is the core protocol in TCP/IP networking. Referring to 
+Figure 8.2, IP is an internet-layer (aka a network-layer or layer 2) protocol. IP provides 
+a “best effort” method for transferring packets between computers—that is, the packets 
+aren’t guaranteed to reach their destination. Packets may also arrive out of order or 
+corrupted. Other components of the TCP/IP stack must deal with these issues and have 
+their own ways of doing so. IP is also the portion of TCP/IP with which IP addresses are 
+associated. (The Real World Scenario sidebar “The Coming of IPv6” describes a change in 
+the IP portion of TCP/IP that’s underway.)
+ICMP The Internet Control Message Protocol (ICMP) is a simple protocol for communicating 
+data. ICMP is most often used to send error messages between computers—for instance, to 
+signal that a requested service isn’t available. This is often done by modifying an IP packet 
+and returning it to its sender, which means that ICMP is technically an internet-layer 
+c08.indd 387 11/12/12 12:12 PM
+388 Chapter 8 ■ Configuring Basic Networking
+protocol, although it relies upon IP. In most cases, you won’t use programs that generate 
+ICMP packets on demand; they’re created behind the scenes as you use other protocols. 
+One exception is the ping program, which is described in more detail in “Testing Basic 
+Connectivity.”
+UDP The User Datagram Protocol (UDP) is the simplest of the common transport-layer 
+(aka layer 3) TCP/IP protocols. It doesn’t provide sophisticated procedures to correct for 
+out-of-order packets, guarantee delivery, or otherwise improve the limitations of IP. This 
+fact can be a problem, but it also means that UDP can be faster than more-sophisticated 
+tools that provide such improvements to IP. Common application-layer protocols that are 
+built atop UDP include the Domain Name System (DNS), the Network File System (NFS), 
+and many streaming-media protocols.
+TCP The Transmission Control Protocol (TCP) may be the most widely used transportlayer protocol in the TCP/IP stack. Unlike UDP, TCP creates full connections with error 
+checking and correction as well as other features. These features simplify the creation of 
+network protocols that must exchange large amounts of data, but the features come at a 
+cost: TCP imposes a small performance penalty. Most of the application-layer protocols 
+with which you may already be familiar, including the Simple Mail Transfer Protocol 
+(SMTP), the Hypertext Transfer Protocol (HTTP), and the File Transfer Protocol (FTP), 
+are built atop TCP.
+You may notice that the name of the TCP/IP stack is built up of two of the stack’s 
+protocol names: TCP and IP. This is because these two protocols are so important for TCP/
+IP networking generally. TCP/IP, though, is much more than just these two protocols; 
+it includes additional protocols, most of which (below the application layer) are rather 
+obscure. On the other hand, a TCP/IP exchange need not use both TCP and IP—it could be 
+a UDP or ICMP exchange, for instance.
+The Coming of IPv6
+The IP portion of TCP/IP has been at version 4 for many years. A major upgrade to this 
+is underway, however, and it goes by the name IPv6, for IP version 6. Its most important 
+improvements over IPv4 include the following:
+■ IPv4 supports a theoretical maximum of about 4 billion addresses. Although this may 
+sound like plenty, those addresses have not been allocated as effi ciently as possible. 
+Therefore, as the Internet has expanded, the number of truly available addresses has 
+been shrinking at a rapid rate—in fact, the global pool is already exhausted, although 
+IPv4 addresses remain available from local registries in many parts of the world, as 
+of late 2012. IPv6 raises the number of addresses to 2128, or 3.4 × 1038. This is enough 
+to give every square millimeter of land surface on Earth 2.2 × 1018 addresses.
+■ IPv6 makes multicasting—the simultaneous transmission of data from one computer 
+to multiple recipients—part of the basic IP specifi cation, compared to an optional 
+(albeit commonly implemented) part of IPv4.
+c08.indd 388 11/12/12 12:12 PM
+Understanding Network Addressing 389
+■ IPv6 includes a new feature, known as stateless address auto-confi guration (SLAAC), 
+which simplifi es initial network setup. This feature is similar in some ways to the 
+Dynamic Host Confi guration Protocol (DHCP) that’s commonly used on IPv4. 
+(DHCP can also be used on IPv6; which works best depends on the local network’s 
+confi guration.)
+■ IPv6 originated the Internet Protocol Security (IPsec) tools, which can improve the 
+ security of Internet connections. IPsec has since been back-ported to IPv4.
+■ IPv6 has streamlined some data structures, enabling quicker processing by routers.
+More obscure differences also exist. Check http://en.wikipedia.org/wiki/IPv6 or 
+http://www.ipv6forum.com for detailed information about IPv6. 
+IPv6 is starting to emerge as a real networking force in many parts of the world. The 
+United States, though, is lagging behind on IPv6 deployment. The Linux kernel includes 
+IPv6 support, and most distributions now attempt to automatically confi gure IPv6 
+networking in addition to IPv4. Chances are that by the time the average offi ce will need 
+IPv6, it will be standard. Confi guring a system for IPv6 is somewhat different from 
+confi guring it for IPv4, which is what this chapter emphasizes.
+Understanding Network Addressing
+In order for one computer to communicate with another over a network, the computers 
+need to have some way to refer to each other. The basic mechanism for doing this is 
+provided by a network address, which can take several different forms, depending on the 
+type of network hardware, protocol stack, and so on. Large and routed networks pose 
+additional challenges to network addressing, and TCP/IP provides answers to these 
+challenges. Finally, to address a specifi c program on a remote computer, TCP/IP uses a 
+port number, which identifi es a specifi c running program, something like the way a telephone 
+extension number identifi es an individual in a large company. The following sections 
+describe all these methods of addressing.
+Using Network Addresses
+Consider an Ethernet network. When an Ethernet frame leaves one computer, it’s normally 
+addressed to another Ethernet card. This addressing is done using low-level Ethernet 
+features, independent of the protocol stack in question. Recall, however, that the Internet 
+is composed of many different networks that use many different low-level hardware 
+components. A user may have a dial-up telephone connection (through a serial port) 
+but connect to one server that uses Ethernet and another that uses Token Ring. Each of these 
+devices uses a different type of low-level network address. TCP/IP requires something more 
+c08.indd 389 11/12/12 12:12 PM
+390 Chapter 8 ■ Configuring Basic Networking
+to integrate across different types of network hardware. In total, three types of addresses 
+are important when you’re trying to understand network addressing: network hardware 
+addresses, numeric IP addresses, and text-based hostnames.
+Addressing Hardware
+One of the characteristics of dedicated network hardware such as Ethernet or Token Ring 
+cards is that they have unique hardware addresses, also known as Media Access Control 
+(MAC) addresses, programmed into them. In the case of Ethernet, these addresses are 
+6 bytes in length, and they’re generally expressed as hexadecimal (base 16) numbers 
+separated by colons. You can discover the hardware address for an Ethernet card by using 
+the ifconfig command. Type ifconfig ethn, where n is the number of the interface 
+(0 for the fi rst card, 1 for the second, and so on). You’ll see several lines of output, including 
+one like the following:
+eth0 Link encap:Ethernet HWaddr 00:A0:CC:24:BA:02
+This line tells you that the device is an Ethernet card and that its hardware address is 
+00:A0:CC:24:BA:02. What use is this, though? Certain low-level network utilities and 
+hardware use the hardware address. For instance, network switches use it to direct data 
+packets. The switch detects that a particular address is connected to a particular wire, and 
+so it sends data directed at that address only over the associated wire. The Dynamic Host 
+Confi guration Protocol (DHCP), which is described in the upcoming section “Confi guring 
+with DHCP,” is a means of automating the confi guration of specifi c computers. It has an 
+option that uses the hardware address to consistently assign the same IP address to a given 
+computer. In addition, advanced network diagnostic tools are available that let you 
+examine packets that come from or are directed to specifi c hardware addresses.
+For the most part, though, you don’t need to be aware of a computer’s hardware address. 
+You don’t enter it in most utilities or programs. It’s important for what it does in general.
+Linux identifies network hardware devices with type-specific codes. With 
+most distributions, Ethernet hardware is ethn, where n is a number from 0
+up. The first Ethernet device is eth0, the second is eth1, and so on. (Fedora 
+uses a more complex Ethernet naming system, though.) Wireless devices 
+have names of the form wlann. Unlike most Linux hardware devices, 
+network devices don’t have entries in /dev; instead, low-level network 
+utilities take the device names and work with them directly.
+Managing IP Addresses
+Earlier, I said that TCP/IP, at least in its IPv4 incarnation, supports about 4 billion 
+addresses. This fi gure is based on the size of the IP address used in TCP/IP: 4 bytes 
+(32 bits). Specifi cally, 232 = 4,294,967,296. For IPv6, 16-byte (128-bit) addresses are used. 
+Not all of these addresses are usable; some are overhead associated with network 
+defi nitions, and some are reserved.
+c08.indd 390 11/12/12 12:12 PM
+Understanding Network Addressing 391
+The 4-byte IPv4 address and 6-byte Ethernet address are mathematically unrelated. This 
+can be the case for IPv6, too, although the IPv6 standard allows the IPv6 address to be 
+built, in part, from the computer’s MAC address. In any event, the TCP/IP stack converts 
+between the MAC address and the IP address using the Address Resolution Protocol (ARP) 
+for IPv4 or the Neighbor Discovery Protocol (NDP) for IPv6. These protocols enable a 
+computer to send a broadcast query—a message that goes out to all the computers on 
+the local network. This query asks the computer with a given IP address to identify itself. 
+When a reply comes in, it includes the hardware address, so the TCP/IP stack can direct 
+traffi c for a given IP address to the target computer’s hardware address.
+The procedure for computers that aren’t on the local network is more 
+complex. For such computers, a router must be involved. Local computers send packets destined for distant addresses to routers, which send the 
+packets on to other routers or to their destination systems.
+IPv4 addresses are usually expressed as four base-10 numbers (0–255) separated by 
+periods, as in 172.30.9.102. If your Linux system’s protocol stack is already up and 
+running, you can discover its IP address by using ifconfig, as described earlier. The output 
+includes a line like the following, which identifi es the IP address (inet addr):
+inet addr:172.30.9.102 Bcast:172.30.255.255 Mask:255.255.0.0
+Although it isn’t obvious from the IP address alone, this address is broken into two 
+components: a network address and a computer address. The network address identifi es 
+a block of IP addresses that are used by one physical network, and the computer address 
+identifi es one computer within that network. The reason for this breakdown is to make the 
+job of routers easier—rather than record how to direct packets destined for each of the 4 
+billion IP addresses, routers can be programmed to direct traffi c based on packets’ network 
+addresses, which is a much simpler job. Ordinarily, a computer can directly communicate 
+only with computers on its local network segment; to communicate outside of this set of 
+computers, a router must be involved.
+IPv6 addresses work in a similar way, except that they’re larger. Specifi cally, IPv6 
+addresses consist of eight groups of four-digit hexadecimal numbers separated by colons, 
+as in fed1:0db8:85a3:08d3:1319:8a2e:0370:7334. If one or more groups of four digits is 
+0000, that group or those groups may be omitted, leaving two colons. Only one such group 
+of zeroes can be compressed in this way, because if you removed two groups, there would 
+be no way of telling how many sets of zeroes would have to be replaced in each group.
+The network mask (also known as the subnet mask or netmask) is a number that identifi es the portion of the IP address that’s a network address and the part that’s a computer 
+address. It’s helpful to think of this in binary (base 2) because the netmask uses binary 1 
+values to represent the network portion of an address and binary 0 values to represent the 
+computer address. The network portion ordinarily leads the computer portion. Expressed 
+in base 10, these addresses usually consist of 255 or 0 values, 255 being a network byte and 
+0 being a computer byte. If a byte is part network and part computer address, it will have 
+some other value. Figure 8.3 illustrates this relationship, using the IP address 172.30.9.102 
+and the netmask 255.255.0.0.
+c08.indd 391 11/12/12 12:12 PM
+392 Chapter 8 ■ Configuring Basic Networking
+Another way of expressing a netmask is as a single number representing the number of 
+network bits in the address. This number usually follows the IP address and a slash. For 
+instance, 172.30.9.102/16 is equivalent to 172.30.9.102 with a netmask of 255.255.0.0—the 
+last number shows the network portion to be two solid 8-bit bytes and hence is 16 bits. 
+The longer notation showing all 4 bytes of the netmask is referred to as dotted quad
+notation. IPv6 netmasks work just like IPv4 netmasks, except that larger numbers are 
+involved, and IPv6 favors hexadecimal over decimal notation.
+On modern IPv4 networks, netmasks are often described in Classless Inter-Domain 
+Routing (CIDR) form. Such network masks can be broken at any bit boundary for any 
+address. For instance, 192.168.1.7 could have a netmask of 255.255.0.0, 255.255.255.0, 
+255.255.255.128, or various other values. (Keeping each byte at 0 or 255 reduces the 
+odds of human error causing problems but sometimes isn’t practical, depending on the 
+required or desired sizes of subnets.) Traditionally, though, IPv4 networks have been 
+broken into one of several classes, as summarized in Table 8.1. Classes A, B, and C are for 
+general networking use. Class D addresses are reserved for multicasting—sending data to 
+multiple computers simultaneously. Class E addresses are reserved for future use. There are 
+a few special cases within most of these ranges. For instance, the 127.x.y.z addresses are 
+reserved for use as loopback (aka localhost) devices—these addresses refer to the computer 
+on which the address is entered. Addresses in which all the machine bits are set to 1 refer 
+to the network block itself—they’re used for broadcasts. The ultimate broadcast address 
+is 255.255.255.255, which sends data to all computers on a network segment. (Routers 
+normally block packets directed to this address. If they didn’t, the Internet could easily be 
+brought to its knees by a few people fl ooding the network with broadcast packets.)
+TABLE 8.1 IPv4 network classes and private network ranges
+Class Address range Reserved private addresses
+A 1.0.0.0–127.255.255.255 10.0.0.0–10.255.255.255
+B 128.0.0.0–191.255.255.255 172.16.0.0–172.31.255.255
+FIGURE 8.3 TCP/IP addresses are combined with a netmask to isolate the network 
+address.
+IP Address 172.30.9.102 10101100 00011110 00001001 01100110
+10101100 00011110 00000000 00000000
+255.255.0.0
+172.30.0.0
+Netmask
+Network Address
+11111111 11111111 00000000 00000000
+c08.indd 392 11/12/12 12:12 PM
+Understanding Network Addressing 393
+C 192.0.0.0–223.255.255.255 192.168.0.0–192.168.255.255
+D 224.0.0.0–239.255.255.255 none
+E 240.0.0.0–255.255.255.255 none
+Within each of the three general-use network classes is a range of addresses reserved 
+for private use. Most IP addresses must be assigned to individual computers by a suitable authority, lest two systems on the Internet both try to use a single address. Anybody 
+can use the reserved private address spaces, though. (These address blocks are sometimes 
+referred to as RFC1918 addresses, after the standards document—RFC1918—in which 
+they’re defi ned.) The caveat is that routers normally drop packets sent to these addresses, 
+effectively isolating them from the Internet as a whole. The idea is that these addresses 
+may be safely used by small private networks. Today, they’re often used behind Network 
+Address Translation (NAT) routers, which enable arbitrary numbers of computers to 
+“hide” behind a single system. The NAT router substitutes its own IP address on outgoing 
+packets and then directs the reply to the correct system. This is very handy if you want to 
+connect more computers to the Internet than you have IP addresses.
+I generally use reserved private addresses for examples in this book. 
+Unless otherwise specified, these examples work equally well on conventional assigned (non-private) IP addresses.
+IPv6 has its equivalent to private addresses. IPv6 site-local addresses may be routed 
+within a site but not off-site. They begin with the hexadecimal number fec, fed, fee, or fef. 
+Link-local addresses are restricted to a single network segment; they shouldn’t be routed at 
+all. These addresses begin with the hexadecimal number fe8, fe9, fea, or feb.
+IPv4 address classes were designed to simplify routing; but as the Internet evolved, they 
+became restrictive. Thus, today they serve mainly as a way to set default netmasks, such as 
+255.0.0.0 for Class A addresses or 255.255.255.0 for Class C addresses. Most confi guration tools set these netmasks automatically, but you can override the settings if necessary.
+IP addresses and netmasks are extremely important for network confi guration. If your 
+network doesn’t use DHCP or a similar protocol to assign IP addresses automatically, you 
+must confi gure your system’s IP address manually. A mistake in this confi guration can 
+cause a complete failure of networking or more subtle errors, such as an inability to 
+communicate with just some computers.
+Non-TCP/IP stacks have their own addressing methods. NetBEUI uses 
+machine names; it has no separate numeric addressing method. AppleTalk 
+uses two 16-bit numbers. These addressing schemes are independent 
+from IP addresses.
+c08.indd 393 11/12/12 12:12 PM
+394 Chapter 8 ■ Configuring Basic Networking
+Broadcasting Data
+Earlier, I mentioned broadcasts. A broadcast is a type of network transmission that’s sent 
+to all the computers on a local network, or occasionally all of the computers on a remote network. Under TCP/IP, a broadcast is done by specifying binary 1 values in all the machine 
+bits of the IP address. The network portion of the IP address may be set to the network’s 
+regular value, and this is required for directed broadcasts—that is, those that are sent to a 
+remote network. (Many routers drop directed broadcasts, though.) In many cases, broadcasts are specifi ed by the use of 255.255.255.255 as an IP address. Packets directed at this 
+address are sent to all the machines on a local network.
+Because the broadcast address for a network is determined by the IP address and netmask, 
+you can convert between the broadcast address and netmask, given one of these and a 
+computer’s IP address. If the netmask happens to consist of whole-byte values (expressed as 
+0 or 255 in dotted quad notation), the conversion is easy: Replace the IP address 
+components that have 0 values in the dotted quad netmask with 255 values to get the 
+broadcast address. For instance, consider a computer with an IP address of 172.30.9.102 
+and a netmask of 255.255.0.0. The fi nal two elements of the netmask have 0 values, so 
+you swap in 255 values for these fi nal two elements in the IP address to obtain a broadcast 
+address of 172.30.255.255.
+In the case of a CIDR address that has non-255 and non-0 values in the netmask, the situation is more complex because you must resort to binary (base 2) numbers. For instance, 
+consider a computer with an IP address of 172.30.9.102 and a netmask of 255.255.128.0 
+(that is, 172.30.0.0/17). Expressed in binary, these numbers are
+10101100 00011110 00001001 01100110
+11111111 11111111 10000000 00000000
+To create the broadcast address, you must set the top (network address) values to 1 when 
+the bottom (netmask) value is 0. In this case, the result is
+10101100 00011110 01111111 11111111
+Converted back into base 10 notation, the resulting broadcast address is 172.30.127.255. 
+Fortunately, you seldom need to perform such computations. When confi guring a computer, 
+you can enter the IP address and netmask and let the computer do the binary 
+computations.
+Understanding Hostnames
+Computers work with numbers, so it’s not surprising that TCP/IP uses numbers as computer 
+addresses. People, though, work better with names. For this reason, TCP/IP includes a 
+way to link names for computers (known as hostnames) to IP addresses. In fact, there 
+are several ways to do this, some of which are described in the next section, “Resolving 
+Hostnames.”
+As with IP addresses, hostnames are composed of two parts: machine names and 
+domain names. The former refers to a specifi c computer and the latter to a collection of 
+computers. Domain names are not equivalent to the network portion of an IP address, 
+c08.indd 394 11/12/12 12:12 PM
+Understanding Network Addressing 395
+though; they’re completely independent concepts. Domain names are registered for use by 
+an individual or organization, which may assign machine names within the domain and 
+link those machine names to any arbitrary IP address desired. Nonetheless, there is 
+frequently some correspondence between domains and network addresses because an 
+individual or organization that controls a domain is also likely to want a block of IP 
+addresses for the computers in that domain.
+Internet domains are structured hierarchically. At the top of the hierarchy are the 
+top-level domains (TLDs), such as .com, .edu, and .uk. These TLD names appear at 
+the end of an Internet address. Some correspond to nations (such as .uk and .us, for the 
+United Kingdom and the United States, respectively), but others correspond to particular 
+types of entities (such as .com and .edu, which stand for commercial and educational 
+ organizations, respectively). Within each TLD are various domains that identify 
+specifi c organizations, such as sybex.com for Sybex or loc.gov for the Library of Congress. 
+These organizations may optionally break their domains into subdomains, such as 
+cis.upenn.edu for the Computer and Information Science department at the University of 
+Pennsylvania. Even subdomains may be further subdivided into their own subdomains; 
+this structure can continue for many levels but usually doesn’t. Domains and subdomains 
+include specifi c computers, such as www.sybex.com, Sybex’s Web server.
+When you confi gure your Linux computer, you may need to know its hostname. This 
+will be assigned by your network administrator and will be a machine name within your 
+organization’s domain. If your computer isn’t part of an organizational network (say, if 
+it’s a system that doesn’t connect to the Internet at all or if it connects only via a dial-up 
+account), you’ll have to make up a hostname. Alternatively, you can register a domain 
+name, even if you don’t use it for running your own servers. Check http://www.icann.org
+/registrar-reports/accredited-list.html for pointers to accredited domain registrars. 
+Most registrars charge between $10 and $15 per year for domain registration. If your 
+network uses DHCP, it may or may not assign your system a hostname automatically.
+If you make up a hostname, choose an invalid domain name. This will 
+guarantee that you don’t accidentally give your computer a name that 
+legitimately belongs to somebody else. Such a name conflict might 
+prevent you from contacting that system, and it could cause other 
+problems as well, such as misdirected email. Four TLDs—.example, 
+.invalid, .localhost, and .test—are reserved for such purposes. Three 
+second-level domains—.example.com, .example.net, and .example.org—
+are also reserved and so may be safely used.
+Resolving Hostnames
+The Domain Name System (DNS) is a distributed database of computers that converts 
+between IP addresses and hostnames. Every domain must maintain at least two DNS 
+servers that can either provide the names for every computer within the domain or redirect 
+a DNS query to another DNS server that can better handle the request. Therefore, looking 
+c08.indd 395 11/12/12 12:12 PM
+396 Chapter 8 ■ Configuring Basic Networking
+up a hostname involves querying a series of DNS servers, each of which redirects the search 
+until the server that’s responsible for the hostname is found. In practice, this process is 
+hidden from you because most organizations maintain DNS servers that do all the tedious 
+work of chatting with other DNS servers. You need only point your computer to your 
+organization’s DNS servers. This detail may be handled through DHCP, or it may be 
+information you need to confi gure manually, as described later in the section “Confi guring 
+Linux for a Local Network.”
+Sometimes, you need to look up DNS information manually. You might do this if you 
+know the IP address of a server through non-DNS means and suspect your DNS confi guration 
+is delivering the wrong address or to check whether a DNS server is working. Several 
+programs can be helpful in performing such checks:
+nslookup This program performs DNS lookups (on individual computers by default) and 
+returns the results. It also sports an interactive mode in which you can perform a series of 
+queries. This program is offi cially deprecated, meaning that it’s no longer being maintained 
+and will eventually be dropped from its parent package (bind-utils or bind-tools on 
+most distributions). Thus, you should get in the habit of using host or dig instead of 

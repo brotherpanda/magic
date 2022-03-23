@@ -1,0 +1,300 @@
+.index{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: aliceblue#fff;
+    color: #555555;
+    font-family: 'Lato', 'Ariali', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    text-rendering: optimizeLegibility;
+}
+
+
+.index{
+    background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)), url(../img/arsebuli2.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+.row{
+    max-width: 1140px;
+    margin: 0 auto; /* 0 auto 0 auto */
+}
+
+.logo{
+    height: 100px;
+    width: auto;
+    float: left;
+    margin-top: 20px;
+}
+
+.main-nav{
+    float: right;
+    list-style: none;
+    margin-top: 55px;
+}
+
+.main-nav li {
+    display: inline-block;
+    margin-left: 40px;
+    
+}
+.main-nav li a:link,
+.main-nav li a:visited {
+    padding: 6px 0;
+    color: #fff;
+    text-decoration: none;
+    font-size: 90%;
+    border: 2px solid transparent;
+    transition: border-bottom 0.9s;
+}
+
+.main-nav li a:hover,
+.main-nav li a:active {
+   border-bottom: 2px solid #e67e22;
+}
+
+/*---headline---*/
+
+h1{ 
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #fff;
+    font-size: 240%;
+    word-spacing: 4px;
+}   
+
+.hero-text-box {
+    position: absolute;
+    width: 1140px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.btn:link,
+.btn:visited {
+    display: inline-block;
+    padding: 10px 30px;
+    text-decoration: none;
+    font-weight: 300;
+    border-radius: 200px;
+    transition: backgorund-color 0.2s, border 0.2s, color 0.2s;
+    
+}
+
+.btn-full:link,
+.btn-full:visited {
+    background-color: #e67e22;
+    border: 1px solid #e67e22;
+    color: #fff;
+    margin-right: 15px;
+}
+
+.btn-ghost:link,
+.btn-ghost:visited {
+    border: 1px solid #e67e22;
+    color: #e67e22;
+}
+
+.btn:hover,
+.btn:active {
+    background-color: #cf6d17;
+    
+}
+
+.btn-full:link,
+.btn-full:visited {
+    background-color: 1xp solid #cf6d17;
+
+    
+}
+
+.btn-ghost:hover,
+.btn-ghost:active {
+    border: 1px solid #cf6d17;
+    color: #fff
+}
+
+.section {
+    padding: 80px 0;
+}
+
+.head {
+    position: absolute;
+    padding-left: 30%;
+    font-size: 80px;
+}
+
+.information1 {
+    padding-top: 10%;
+}
+
+/** section 1 **/
+.bigbox{
+    display: flex;
+}
+.firistbox{
+    background-image:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.1));
+    width: 50%;
+    padding: 104px 91px 50px 82px; 
+    background-color: #71707c;
+}
+.firistbox h2{
+    font-family: 'Lato-Light';
+    font-size: 50px;
+    margin-bottom: 36px;
+    width: 468px;
+    color: #D9F0FF;
+}
+.firistbox p{
+    font-size: 17px;
+    opacity: 0.9;
+    margin-bottom: 51px;
+    width: 700px;
+    color: #D9F0FF;
+}
+
+.secendbutton{
+    background-color: #325DFF;
+    border-radius: 36px;
+    width: 307px;
+    height: 72px;
+    border: none;
+}
+.secendbutton a {
+    font-family: 'Lato-Bold';
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #fff;
+}
+
+.secendimg{
+    height: 700px;
+    width: 60%;
+    background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url(../img/artworks-000424067709-yt81va-t500x500.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top left;
+}
+
+.sectionhead {
+    background-image:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.1)),url(../img/arsebuli3.jpg);
+    background-color: #FAFAFA;
+    padding: 87px 54px 119px 55px;
+}
+.sectionhead h2 {
+    font-family: 'Lato-Light';
+    font-size: 35px;
+    margin-bottom: 23px;
+    text-align: center;
+    color: #D9F0FF;
+}
+.secheadtxt {
+    font-family: 'Poppins-Regular';
+    font-size: 16px;
+    opacity: 0.75;
+    margin: 0 0 89px 500px;
+    text-align: center;
+    width: 771px;
+    color: #D9F0FF;
+}
+.iconbox{
+    
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.box {
+    padding: 67px 72px 54px 76px;
+    width: 250px;
+    
+}
+.box:nth-child(1),
+.box:nth-child(2),
+.box:nth-child(3) {
+    margin-bottom: 25px;
+}
+.box h3 {
+    font-family: 'Lato-Regular';
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 28px;
+    color: #D9F0FF;
+}
+.box p {
+    font-family: 'Poppins-Light';
+    font-size: 16px; 
+    color: #D9F0FF;
+}
+
+.box i{
+    color: #fff;
+    font-size: 32px;
+    position: absolute;
+    top: 35%;
+    left: 32%;
+}
+
+.icon {
+    background-color: #325DFF;
+    border-radius: 100px;
+    height: 88px;
+    width: 88px;
+    position: relative;
+    margin:0 0 30px 85px;
+}
+
+
+
+
+.btn:link,
+.btn:visited {
+    padding: 10px 30px;
+    text-decoration: none;
+    font-weight: 300;
+    border-radius: 200px;
+   
+    
+}
+
+.btn:hover,
+.btn:active {
+    background-color: #cf6d17;
+    
+}
+
+/*.index2{
+    background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)), url(../img/arsebuli2.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+.titlem {
+    text-align: center;
+    padding-top: 10%;
+    color: #fff;
+}
+.titlem2 {
+    text-align: center;
+    color: #fff;
+    padding: 10%;
+}
+
+.m2 {
+    text-align: center;
+    color: floralwhite;
+    padding-top: 1%;
+}*/
+
+

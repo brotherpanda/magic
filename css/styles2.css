@@ -122,7 +122,7 @@ a {
 }
 
 .child1 {
-	width: 50%;
+	width: 60%;
 	height: 50%;
 	background-color: 
 	
@@ -130,9 +130,8 @@ a {
 
 .childp {
 	padding-top: 18%;
-	font-size: 11px;
+	padding-left: 50%;
 	color: #FFF;
-	text-align: center;
 	font-family: 'Roboto', sans-serif;
 
 }
@@ -144,4 +143,18 @@ a {
 	color: #FFF;
 	font-family: 'Roboto', sans-serif;
 
+}
+
+#gret {
+	margin: 0 15% 4% 15%;
+}
+
+#gret1 {
+	margin: 10% 6% 4% 6%;
+}
+
+
+#lyrbrari {
+	text-align: center;
+	font-size: 90%;
 }
